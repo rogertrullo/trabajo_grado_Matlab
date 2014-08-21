@@ -1,9 +1,6 @@
-%%clc
-clear all
-close all
-%%
-ruta='C:\Users\Roger\Desktop\Datasets_carDetection\data-CMUVD\videos\set00\imgs\';
-ruta1='C:\Users\Roger\Desktop\exposiciones_vision_posgrado\deteccion_simetria\varias\';
+function []=prueba_sombras(I)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Incializacion %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 umbral_bordes=20;
 largo_minimo=11;
 normalizar=true;
@@ -11,10 +8,8 @@ se = strel('line',8, 0); % linea recta de 8 pixeles
 se1 = strel('square',3);%cuadrado 3x3
 se2=strel('line',8, 90); %
 se3=strel('line',3, 90); %
-
-I=imread(strcat(ruta,'I00000.jpg'));%86,315
-I=I(1:900,:,:);%recorto para quitar la parte del carro
-%I=imread('img_000.jpg');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+I=imread(I);
 imshow(I)
 title('original')
 I=imresize(I,[240 320]);
@@ -29,9 +24,10 @@ title('grises')
 figure
 imhist(Igris);
 title('hist grises')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%
-%%normalizacion
+%%%%%%%%%%%%%%%%%%%%%%%%%%%normalizacion%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Igris = histeq(Igris);%mirar otras tecnicas  
 if(normalizar)
 %Igris = double(Igris)./double(max(Igris(:)));
@@ -48,6 +44,7 @@ figure
 imhist(Igris);
 title('hist grises normalizada')
 end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 
 Isombras=LHCR(uint8(Igris));
@@ -84,17 +81,17 @@ imshow(I.*RIM)
 closeBW = imclose(Isegmentada,se);
 openBW=imopen(Isegmentada,se);
 figure, imshow(closeBW),title('closed')
-lines = cv.HoughLinesP(closeBW,'Rho',10,'Threshold',5,'MinLineLength',5,'MaxLineGap',20,'Theta',pi/2);
-%openBW=closeBW;
-figure, imshow(openBW),title('opened')
-figure, imshow(I),title('original con hough')
-hold on
-for i=1:numel(lines)
-    if(lines{i}(1)==lines{i}(3))
-        break
-    end
-    line([lines{i}(1),lines{i}(3)],[lines{i}(2),lines{i}(4)],'linewidth',2,'Color','g');
-end
+% lines = cv.HoughLinesP(closeBW,'Rho',10,'Threshold',5,'MinLineLength',5,'MaxLineGap',20,'Theta',pi/2);
+% %openBW=closeBW;
+% figure, imshow(openBW),title('opened')
+% figure, imshow(I),title('original con hough')
+% hold on
+% for i=1:numel(lines)
+%     if(lines{i}(1)==lines{i}(3))
+%         break
+%     end
+%     line([lines{i}(1),lines{i}(3)],[lines{i}(2),lines{i}(4)],'linewidth',2,'Color','g');
+% end
 
 
 RIM=uint8(openBW);
